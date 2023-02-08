@@ -8,22 +8,15 @@ require 'dry/types'
 module Drymm
   module Constants
     include Dry::Core::Constants
-    include Dry::Logic
-
-    CONST_VALUE = Dry::Types['coercible.symbol'].constrained(eql: :const)
-
-    CONST_RULE = Builder.call { key(name: 0) { case?(CONST_VALUE) } }
-
-    BLANK_HASH = Dry::Types['hash'].constrained(size: 0)
-
-    WRAPPED_HASH = Dry::Types['array'].of(Dry::Types['hash']).constrained(size: 1)
 
     STR_Undefined = 'Undefined'
 
     SYM_PATTERN = /^[a-z]\w+/
 
-    Bypass = proc(&:itself)
+    # Proc to bypass the given argument
+    Bypass = -> (input) { input }.freeze
 
-    WrappedBypass = proc { Bypass }
+    # Proc to bypass the given argument wrapped in another proc
+    WrappedBypass = proc { Bypass }.freeze
   end
 end
