@@ -35,9 +35,9 @@ module Drymm
       Dry::Types::Constrained.new(t(member), rule: rule)
     end
 
-    register 'sum.types', proc { Shapes::Types::Type.descendants.reduce(:|) }, memoize: false
+    register 'sum.types', proc { Shapes::Types::Type }, memoize: false
 
-    register 'sum.rules', proc { Shapes::Logic::Rule.descendants.reduce(:|) }, memoize: false
+    register 'sum.rules', proc { Shapes::Logic::Rule }, memoize: false
 
     register 'variadic.any', proc { Array[:any] }, memoize: true
 

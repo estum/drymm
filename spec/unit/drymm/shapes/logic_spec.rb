@@ -2,7 +2,7 @@
 
 module Drymm::Shapes
   RSpec.describe Logic do
-    subject(:shape_branch) { described_class }
+    subject(:shape_branch) { Logic }
 
     describe '.sum' do
       subject(:sum) { shape_branch.sum }
@@ -34,12 +34,14 @@ module Drymm::Shapes
         rule: serialized_rule(arg) }
     end
 
-    context 'with instantiated coder' do
+    describe Logic::Predicate do
       it_behaves_like 'bidirectional shape', 'predicate rule' do
         let(:input) { rule }
         let(:output) { serialized_rule }
       end
+    end
 
+    describe Logic::RoutedUnary do
       it_behaves_like 'bidirectional shape', 'KEY rule' do
         let(:input) { key_op }
         let(:output) { serialized_key_op }
@@ -49,17 +51,28 @@ module Drymm::Shapes
         let(:input) { attr_op }
         let(:output) { { type: :attr, path: :email, rule: serialized_rule } }
       end
+    end
 
+    describe Logic::Check do
       it_behaves_like 'bidirectional shape', 'CHECK rule' do
         let(:input) { check_op }
         let(:output) { { type: :check, keys: %i[email], rule: serialized_rule } }
+      end
+    end
+
+    describe Logic::Unary do
+      it_behaves_like 'bidirectional shape', 'EACH rule' do
+        let(:input) { each_op }
+        let(:output) { { type: :each, rule: serialized_rule } }
       end
 
       it_behaves_like 'bidirectional shape', 'NOT rule' do
         let(:input) { not_key_op }
         let(:output) { { type: :not, rule: serialized_key_op } }
       end
+    end
 
+    describe Logic::Grouping do
       it_behaves_like 'bidirectional shape', 'AND rule' do
         let(:input) { and_op }
         let(:output) { { type: :and, rules: [serialized_key_op, serialized_rule] } }
@@ -78,11 +91,6 @@ module Drymm::Shapes
       it_behaves_like 'bidirectional shape', 'SET rule' do
         let(:input) { set_op }
         let(:output) { { type: :set, rules: [serialized_rule] } }
-      end
-
-      it_behaves_like 'bidirectional shape', 'EACH rule' do
-        let(:input) { each_op }
-        let(:output) { { type: :each, rule: serialized_rule } }
       end
     end
   end

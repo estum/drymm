@@ -1,37 +1,66 @@
 # frozen_string_literal: true
 
+RSpec.shared_examples "shape instance" do
+  it { is_expected.to be_instance_of(described_class) }
+
+  describe '#to_ast' do
+    subject(:ast) { shape.to_ast }
+    it { is_expected.to eq(input_ast) }
+  end
+
+  describe '#to_hash' do
+    subject(:hash) { shape.to_hash }
+    it { is_expected.to eq(output) }
+  end
+
+  describe '#compile' do
+    subject(:compiled) { shape.compile }
+    it { is_expected.to eq(input) }
+  end
+end
+
 RSpec.shared_examples "bidirectional shape" do |label|
-  context "with #{label} as input" do
+  context "with input of #{label}" do
     let(:input_ast) { input.to_ast }
 
-    describe '#[output].to_ast' do
-      subject(:ast) { shape_branch.sum[output].to_ast }
-      it { is_expected.to eq(input_ast) }
-    end
+    describe 'shape_branch.call' do
+      it "produces the same result for both ast and hash inputs" do
+        expect(shape_branch.(input_ast)).to eq(shape_branch.(output))
+      end
 
-    describe '#[ast_of_input].to_h' do
-      subject(:serialized) { shape_branch.sum[input_ast].to_h }
-      it { is_expected.to eq(output) }
+      context 'on built shape' do
+        subject(:shape) { shape_branch.(call_input) }
 
-      context '…and then #[serialized] back' do
-        subject(:compiled) { shape_branch.sum[serialized].compile }
-        it { is_expected.to eq(input) }
+        context 'from AST array' do
+          let(:call_input) { input_ast }
+          include_examples 'shape instance'
+        end
+
+        context 'from Hash' do
+          let(:call_input) { output }
+          include_examples 'shape instance'
+        end
       end
     end
 
-    # describe '#[output]' do
-    #   subject(:compiled) { shape_branch[output] }
-    #   it { is_expected.to eq(input) }
-    #
-    #   context '…and then #serialize(compiled) back' do
-    #     subject(:serialized) { coder.serialize(compiled) }
-    #     it { is_expected.to eq(output) }
-    #   end
-    #
-    #   context '…and then compiled.to_ast' do
-    #     subject(:ast) { compiled.to_ast }
-    #     it { is_expected.to eq(input_ast) }
-    #   end
-    # end
+    describe '.call' do
+      it "produces the same result for both ast and hash inputs" do
+        expect(described_class.(input_ast)).to eq(described_class.(output))
+      end
+
+      context 'on built shape' do
+        subject(:shape) { described_class.(call_input) }
+
+        context 'from AST array' do
+          let(:call_input) { input_ast }
+          include_examples 'shape instance'
+        end
+
+        context 'from Hash' do
+          let(:call_input) { output }
+          include_examples 'shape instance'
+        end
+      end
+    end
   end
 end

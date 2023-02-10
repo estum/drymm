@@ -9,17 +9,11 @@ module Drymm::Shapes
       # @api private
       # Defines {sum} class attribute when extended.
       private def extended(base)
-        base.defines :sum
         base.defines :tuple_right
         base.tuple_right true
         base.private_class_method :auto_tuple
       end
     end
-
-    # @!method sum(value)
-
-    # @!attribute sum [r]
-    #   @return [Dry::Types::Sum]
 
     # @api private
     # Flattens the 1st level of the input array.
@@ -51,18 +45,6 @@ module Drymm::Shapes
     end
 
     private
-
-    # @api private
-    # Declares the `type` attribute entirely in each subclass
-    # (because each subclass have its own node type identifier).
-    # Also each subclass instantiation updates {.sum} class attribute.
-    def inherited(subclass)
-      super
-
-      if abstract
-        subclass.attribute :type, subclass.type_identifier
-      end
-    end
 
     # Shorthand method to build a tuple
     # @return [Dry::Types::Tuple]

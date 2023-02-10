@@ -11,5 +11,13 @@ module Drymm
     def self.call(input)
       sum.call(input)
     end
+
+    # @api private
+    module Mix
+      private def included(base)
+        base.extend(const_get(:ClassMethods))
+      end
+    end
+
   end
 end

@@ -11,7 +11,7 @@ module Drymm::Shapes
   #   Drymm::Shapes::Const[name: 'Dry'].to_literal
   #   # => Dry
   class Const < Node
-    attribute :type, Node.type_identifier(:const).default { :const }
+    attribute :type, type_identifier(:const).default { :const }
     attribute :name, Drymm['types.str']
 
     include Dry.Equalizer(:name, immutable: true)

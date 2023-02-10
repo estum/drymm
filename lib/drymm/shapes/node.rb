@@ -9,8 +9,9 @@ module Drymm::Shapes
     abstract
 
     extend Dry::Tuple::StructClassInterface
-
     include Drymm::Constants
+    include JSONMethods
+    include ASTMethods
 
     class << self
       # @overload type_identifier(klass)
@@ -31,29 +32,24 @@ module Drymm::Shapes
       #       super(:hooked)
       #     end
       #   end
-      def type_identifier(class_or_name = self)
-        name =
-          if class_or_name.is_a?(::Module)
-            Drymm['fn.type_identifier'][class_or_name.name]
-          else
-            class_or_name.to_sym
-          end
-        Drymm['types.sym'].constrained(eql:  name)
+      def type_identifier(input = self)
+        case input
+        when ::String, ::Symbol
+          Drymm['types.sym'].constrained(eql: input.to_sym)
+        when ::Array
+          Drymm['types.sym'].enum(*input)
+        when ::Module
+          type_identifier(Drymm['fn.type_identifier'][input.name])
+        else
+          raise ArgumentError
+        end
       end
 
-      # @abstract
-      #   Should be overriden in subclasses to return specific compiler
-      # @param registry [container]
-      # @return [#call]
-      def compiler(registry = compiler_registry())
-        raise NotImplementedError
-      end
-
-      # @abstract
-      #   Should be overriden in subclasses to return specific registry
-      # @return [container]
-      def compiler_registry
-        raise NotImplementedError
+      # Shorthand to declare type as a enum
+      # @param input [Array<Symbol>]
+      # @return [Dry::Types[Enum<Symbol>]]
+      def type_enum(*input)
+        type_identifier(input)
       end
 
       # @api private
@@ -63,20 +59,6 @@ module Drymm::Shapes
         super
         auto_tuple(*keys)
       end
-    end
-
-    # Fold data back into the plain AST
-    # @return [Array]
-    def to_ast
-      type, *node = attributes.values_at(*self.class.keys_order)
-      node.map! { |item| item.respond_to?(:to_ast) ? item.to_ast : item }
-      node = node[0] if node.size == 1
-      [type, node]
-    end
-
-    # Compile data back to original` object
-    def compile
-      self.class.compiler.([to_ast]).dig(0)
     end
   end
 end
