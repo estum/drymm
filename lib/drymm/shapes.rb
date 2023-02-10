@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Drymm
-  module S
+  module Shapes
     include Constants
 
     def self.sum

@@ -22,4 +22,5 @@ end
 group :console do
   gem "pry"
   gem "pry-byebug"
+  gem "wirb"
 end

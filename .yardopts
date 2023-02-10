@@ -1,0 +1,7 @@
+--db .yardoc \
+--markup-provider commonmarker \
+--markup markdown \
+--no-single-db \
+--no-document \
+--embed-mixins \
+--hide-void-return

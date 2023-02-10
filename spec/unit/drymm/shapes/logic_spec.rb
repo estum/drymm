@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
-module Drymm
-  RSpec.describe LogicCoder do
-    subject(:coder_class) { described_class }
+module Drymm::Shapes
+  RSpec.describe Logic do
+    subject(:shape_branch) { described_class }
+
+    describe '.sum' do
+      subject(:sum) { shape_branch.sum }
+      it { is_expected.to be_instance_of(Dry::Struct::Sum) }
+    end
 
     include_context "logic predicates"
 
@@ -30,54 +35,52 @@ module Drymm
     end
 
     context 'with instantiated coder' do
-      subject(:coder) { coder_class.new }
-
-      it_behaves_like 'bidirectional coder', 'predicate rule' do
+      it_behaves_like 'bidirectional shape', 'predicate rule' do
         let(:input) { rule }
         let(:output) { serialized_rule }
       end
 
-      it_behaves_like 'bidirectional coder', 'KEY rule' do
+      it_behaves_like 'bidirectional shape', 'KEY rule' do
         let(:input) { key_op }
         let(:output) { serialized_key_op }
       end
 
-      it_behaves_like 'bidirectional coder', 'ATTR rule' do
+      it_behaves_like 'bidirectional shape', 'ATTR rule' do
         let(:input) { attr_op }
         let(:output) { { type: :attr, path: :email, rule: serialized_rule } }
       end
 
-      it_behaves_like 'bidirectional coder', 'CHECK rule' do
+      it_behaves_like 'bidirectional shape', 'CHECK rule' do
         let(:input) { check_op }
         let(:output) { { type: :check, keys: %i[email], rule: serialized_rule } }
       end
 
-      it_behaves_like 'bidirectional coder', 'NOT rule' do
+      it_behaves_like 'bidirectional shape', 'NOT rule' do
         let(:input) { not_key_op }
         let(:output) { { type: :not, rule: serialized_key_op } }
       end
 
-      it_behaves_like 'bidirectional coder', 'AND rule' do
+      it_behaves_like 'bidirectional shape', 'AND rule' do
         let(:input) { and_op }
         let(:output) { { type: :and, rules: [serialized_key_op, serialized_rule] } }
       end
 
-      it_behaves_like 'bidirectional coder', 'OR rule' do
+      it_behaves_like 'bidirectional shape', 'OR rule' do
         let(:input) { or_op }
         let(:output) { { type: :or, rules: [serialized_key_op, serialized_rule] } }
       end
 
-      it_behaves_like 'bidirectional coder', 'XOR rule' do
+      it_behaves_like 'bidirectional shape', 'XOR rule' do
         let(:input) { xor_op }
         let(:output) { { type: :xor, rules: [serialized_key_op, serialized_rule] } }
       end
 
-      it_behaves_like 'bidirectional coder', 'SET rule' do
+      it_behaves_like 'bidirectional shape', 'SET rule' do
         let(:input) { set_op }
         let(:output) { { type: :set, rules: [serialized_rule] } }
       end
 
-      it_behaves_like 'bidirectional coder', 'EACH rule' do
+      it_behaves_like 'bidirectional shape', 'EACH rule' do
         let(:input) { each_op }
         let(:output) { { type: :each, rule: serialized_rule } }
       end
