@@ -45,9 +45,11 @@ module Drymm
 
     register 'variadic.rules', proc { Array['sum.rules'].meta(rehash: 'types.variadic.rules') }, memoize: false
 
-    register :fn, proc { Shapes::Fn::Sum }, memoize: false
+    register :fn, proc { Shapes::Fn.sum }, memoize: false
 
     register :const, proc { Shapes::Const }, memoize: false
+
+    register :ast, proc { constrained(:any, Drymm['rules.as_ast']) }, memoize: true
 
     alias_item :meta, :opts
 

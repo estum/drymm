@@ -5,14 +5,38 @@ module Drymm::Shapes
   module Fn
     extend SumEnclosure
 
+    class FnNode < Node
+      attribute :type, type_enum(:id, :callable, :method)
+
+      def self.namespace
+        Fn
+      end
+
+      # @return [::Dry::Logic::Predicates]
+      def self.compiler_registry
+        ::Dry::Types.container
+      end
+
+      # @return [::Dry::Logic::RuleCompiler]
+      def self.compiler(registry = compiler_registry())
+        ::Dry::Types::Compiler.new(registry)
+      end
+
+      def compile
+        self.class.compiler.compile_fn(to_ast)
+      end
+    end
+
+    self.sum = FnNode
+
     # Represents functions, stored in {Dry::Types::FnContainer}
-    class ID < Node
+    class ID < FnNode
       attribute :type, type_identifier(:id)
-      attribute :id, Drymm['types.sym']
+      attribute :id, Drymm['types.str']
     end
 
     # Represent callable objects but not an internal procs
-    class Callable < Node
+    class Callable < FnNode
       attribute :type, type_identifier(:callable)
       attribute :callable, Drymm['types.any']
 
@@ -21,9 +45,9 @@ module Drymm::Shapes
     end
 
     # Represents a method calls
-    class Method < Node
+    class Method < FnNode
       attribute :type, type_identifier(:method)
-      attribute :target, Drymm['types.const']
+      attribute :target, Drymm['types.const'] | Drymm['types.any']
       attribute :name, Drymm['types.sym']
 
       def to_ast

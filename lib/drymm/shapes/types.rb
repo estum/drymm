@@ -2,140 +2,125 @@
 
 module Drymm::Shapes
   module Types
-    ##
-    # @group Mixins
-
-    module Meta
-      private_class_method def self.included(base)
-        base.attribute :meta, Drymm['types.meta']
-      rescue
-      end
-
-      # @!attribute meta [r]
-      #   @return [Hash]
-    end
-
-    module Opts
-      private_class_method def self.included(base)
-        base.attribute :options, Drymm['types.opts']
-      end
-
-      # @!attribute options [r]
-      #   @return [Hash]
-    end
-
-    module Complex
-      private_class_method def self.included(base)
-        base.attribute :nominal, Drymm['types.sum.types']
-      end
-
-      # @!attribute nominal [r]
-      #   @return [Types.sum]
-    end
-
-    module Keys
-      private_class_method def self.included(base)
-        base.attribute :keys, Drymm['types.variadic.types']
-      end
-
-      # @!attribute keys [r]
-      #   @return [Array(Any)]
-    end
-
-    module Binary
-      private_class_method def self.included(base)
-        sum_types = Drymm['types.sum.types']
-        base.attributes left: sum_types, right: sum_types
-      end
-
-      # @!attribute left [r]
-      #   @return [Types.sum]
-
-      # @!attribute right [r]
-      #   @return [Types.sum]
-    end
-
-    # @endgroup
-    ##
-
-    ##
-    # @group Classes
+    extend SumEnclosure
 
     # Abstract node branch class for shapes of {Dry::Types}
     class Type < Node
       abstract
       extend Branch
+
+      def self.namespace
+        Types
+      end
+
+      # @return [::Dry::Logic::Predicates]
+      def self.compiler_registry
+        ::Dry::Types
+      end
+
+      # @return [::Dry::Logic::RuleCompiler]
+      def self.compiler(registry = compiler_registry())
+        ::Dry::Types::Compiler.new(registry)
+      end
+
+      def compile
+        self.class.compiler.(to_ast)
+      end
     end
+
+    self.sum = Type
 
     class Any < Type
-      include Meta
-    end
-
-    class Nominal < Type
-      attribute :type_class, Drymm['types.const']
-      include Meta
-    end
-
-    class Constrained < Type
-      [Complex, Logic::Unary].each &method(:include)
-    end
-
-    class Constructor < Type
-      include Complex
-      attribute :fn, Drymm['types.fn']
-    end
-
-    class Lax < Type
-      attribute :node, Drymm['types.sum.types']
-    end
-
-    class Sum < Type
-      [Binary, Meta].each &method(:include)
+      tuple_right false
+      attribute :type, type_identifier
+      attribute :meta, Drymm['types.meta']
     end
 
     class Array < Type
-      attribute :member, Drymm['types.member']
-      include Meta
+      attribute :type, type_identifier
+      attribute :member, Drymm['types.sum.types']
+      attribute :meta, Drymm['types.meta']
     end
 
-    class Hash < Type
-      [Opts, Meta].each &method(:include)
-    end
-
-    class Schema < Type
-      [Keys, Opts, Meta].each &method(:include)
-    end
-
-    class JSONHash < Type
-      [Keys, Meta].each &method(:include)
-    end
-
-    class ParamsHash < Type
-      [Keys, Meta].each &method(:include)
-    end
-
-    class JSONArray < Type
+    class CoercibleArray < Type
+      attribute :type, type_enum(:json_array, :params_array)
       attribute :member, Drymm['types.sum.types']
     end
 
-    class ParamsArray < Type
-      attribute :member, Drymm['types.sum.types']
+    class CoercibleHash < Type
+      attribute :type, type_enum(:json_hash, :params_hash)
+      attribute :keys, Drymm['types.variadic.types']
+      attribute :meta, Drymm['types.meta']
     end
 
-    class Key < Type
-      attributes name: Drymm['types.any'], required: Drymm['types.bool'], node: Drymm['types.sum.types']
+    class Composition < Type
+      attribute :type, type_enum(:implication, :intersection, :transition, :sum)
+      attribute :left, Drymm['types.sum.types']
+      attribute :right, Drymm['types.sum.types']
+      attribute :meta, Drymm['types.meta']
+    end
+
+    class Constrained < Type
+      attribute :type, type_identifier
+      attribute :base, Drymm['types.sum.types']
+      attribute :rule, Drymm['types.sum.rules']
+    end
+
+    class Constructor < Type
+      attribute :type, type_identifier
+      attribute :base, Drymm['types.sum.types']
+      attribute :fn, Drymm['types.fn']
     end
 
     class Enum < Type
-      attributes node: Drymm['types.sum.types'], mapping: Drymm['types.hash']
+      attribute :type, type_identifier
+      attribute :base, Drymm['types.sum.types']
+      attribute :mapping, Drymm['types.hash']
+    end
+
+    class Hash < Type
+      attribute :type, type_identifier
+      attribute :options, Drymm['types.opts']
+      attribute :meta, Drymm['types.meta']
+    end
+
+    class Key < Type
+      attribute :type, type_identifier
+      attribute :name, Drymm['types.any']
+      attribute :required, Drymm['types.bool']
+      attribute :base, Drymm['types.sum.types']
+    end
+
+    class Lax < Type
+      tuple_right false
+      attribute :type, type_identifier
+      attribute :base, Drymm['types.sum.types']
+
+      def self.coerce_tuple((type, base))
+        { type: type, base: base }
+      end
     end
 
     class Map < Type
-      attributes key_type: Drymm['types.sum.types'], value_type: Drymm['types.sum.types']
-      include Meta
+      attribute :type, type_identifier
+      attribute :key_type, Drymm['types.sum.types']
+      attribute :value_type, Drymm['types.sum.types']
+      attribute :meta, Drymm['types.meta']
     end
 
-    # @endgroup
-    ##
+    class Nominal < Type
+      attribute :type, type_identifier
+      attribute :base, Drymm['types.const']
+      attribute :meta, Drymm['types.meta']
+    end
+
+    class Schema < Type
+      attribute :type, type_identifier
+      attribute :keys, Drymm['types.variadic.types']
+      attribute :options, Drymm['types.opts']
+      attribute :meta, Drymm['types.meta']
+    end
+
+    self.sum = Any | Array | CoercibleArray | CoercibleHash | Composition | Constrained | Constructor | Enum | Hash | Key | Lax | Map | Nominal | Schema
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "shape instance" do
+RSpec.shared_examples "shape instance" do |label|
   it { is_expected.to be_instance_of(described_class) }
 
   describe '#to_ast' do
@@ -15,7 +15,12 @@ RSpec.shared_examples "shape instance" do
 
   describe '#compile' do
     subject(:compiled) { shape.compile }
-    it { is_expected.to eq(input) }
+    case label
+    when 'Fn::Method', 'Fn::ID'
+      it { is_expected.to eq(input.fn) }
+    else
+      it { is_expected.to eq(input) }
+    end
   end
 end
 
@@ -33,12 +38,12 @@ RSpec.shared_examples "bidirectional shape" do |label|
 
         context 'from AST array' do
           let(:call_input) { input_ast }
-          include_examples 'shape instance'
+          include_examples 'shape instance', label
         end
 
         context 'from Hash' do
           let(:call_input) { output }
-          include_examples 'shape instance'
+          include_examples 'shape instance', label
         end
       end
     end
@@ -53,12 +58,12 @@ RSpec.shared_examples "bidirectional shape" do |label|
 
         context 'from AST array' do
           let(:call_input) { input_ast }
-          include_examples 'shape instance'
+          include_examples 'shape instance', label
         end
 
         context 'from Hash' do
           let(:call_input) { output }
-          include_examples 'shape instance'
+          include_examples 'shape instance', label
         end
       end
     end

@@ -15,7 +15,6 @@ require 'dry/tuple'
 # Load patches for dry-rb gems if need
 
 require_relative 'dry/types/printer/visit_sum_constructors' if !Dry::Types::Printer.method_defined?(:visit_sum_constructors)
-require_relative 'dry/types/transition' if !defined?(Dry::Types::Transitive)
 require_relative 'dry/logic/builder/context_predicate_name' if !Dry::Logic::Builder::Context.instance_method(:predicate).parameters.include?([:opt, :context])
 
 require_relative 'drymm/inflector'
@@ -49,13 +48,13 @@ module Drymm
   extend Container
 
   merge Drymm::RulesRepo, namespace: :rules
-
   merge Drymm::FnRepo, namespace: :fn
-
   merge Drymm::TypesRepo, namespace: :types
 
+  logic_builder = self['fn.logic_builder']
+
   keys.grep(/^rules/).each do |key|
-    decorate key, with: self['fn.logic_builder']
+    decorate key, with: logic_builder
   end
 
   register :sum, memoize: true do

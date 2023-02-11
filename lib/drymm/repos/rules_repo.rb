@@ -15,5 +15,9 @@ module Drymm
     register :node,
       proc { array? & min_size?(1) & key(name: 0) { negation { array? } } },
       call: false
+
+    register :as_ast,
+      proc { respond_to?(:to_ast) },
+      call: false
   end
 end

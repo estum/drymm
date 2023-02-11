@@ -8,7 +8,7 @@ module Drymm::Shapes
     # @return [Array]
     def to_ast
       type, *node = attributes.values_at(*self.class.keys_order)
-      node.map! { |item| item.respond_to?(:to_ast) ? item.to_ast : item }
+      node = recursive_ast(node)
       node = node[0] if node.size == 1
       [type, node]
     end
@@ -19,6 +19,21 @@ module Drymm::Shapes
     # @return [Object]
     def compile
       self.class.compiler.([to_ast]).dig(0)
+    end
+
+    private
+
+    def recursive_ast(node)
+      case node
+      when Array
+        node.map { |item| recursive_ast(item) }
+      when Hash
+        node.transform_values { |item| recursive_ast(item) }
+      when Drymm['types.ast']
+        node.to_ast
+      else
+        node
+      end
     end
 
     module ClassMethods

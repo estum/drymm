@@ -41,16 +41,19 @@ module Drymm::Shapes
 
     private
 
+    # @api private
     def finalize_sum!(base)
       base.descendants.each do |subclass|
         changed = false
         new_keys = subclass.schema.keys.map do |key|
-          if key.type == base
+          if key.type.is_a?(Branch)
+            ns = key.type.namespace
             changed = true
-            key.send(:__new__, @sum)
-          elsif key.type.respond_to?(:member) && key.type.member == base
+            key.send(:__new__, ns.sum)
+          elsif key.type.respond_to?(:member) && key.type.member.is_a?(Branch)
+            ns = key.type.member.namespace
             changed = true
-            key.send(:__new__, key.type.of(@sum))
+            key.send(:__new__, key.type.of(ns.sum))
           else
             key
           end

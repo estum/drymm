@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "dry-struct"
   spec.add_runtime_dependency "dry-monads"
   spec.add_runtime_dependency "dry-types-tuple", ">= 0.1.4"
+  spec.add_runtime_dependency "dry-auto_inject"
   spec.add_runtime_dependency "zeitwerk"
 
   spec.add_development_dependency "bundler"

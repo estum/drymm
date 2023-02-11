@@ -4,12 +4,16 @@ module Drymm
   module Shapes
     include Constants
 
-    def self.sum
-      Drymm['sum']
-    end
+    class << self
+      def sum
+        Drymm['sum']
+      end
 
-    def self.call(input)
-      sum.call(input)
+      def call(input)
+        sum.call(input)
+      end
+
+      alias_method :[], :call
     end
 
     # @api private

@@ -9,6 +9,10 @@ module Drymm::Shapes
       abstract
       extend Branch
 
+      def self.namespace
+        Logic
+      end
+
       # @return [::Dry::Logic::Predicates]
       def self.compiler_registry
         ::Dry::Logic::Predicates
@@ -65,7 +69,7 @@ module Drymm::Shapes
     end
 
     class BinaryComposition < Rule
-      attribute :type, type_enum(:implication, :transition)
+      attribute :type, type_enum(:implication)
       attribute :left, Drymm['types.sum.rules']
       attribute :right, Drymm['types.sum.rules']
     end
