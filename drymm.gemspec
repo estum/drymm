@@ -25,8 +25,8 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.6.0"
 
-  spec.add_runtime_dependency "concurrent-ruby"
-  spec.add_runtime_dependency "concurrent-ruby-ext"
+  spec.add_runtime_dependency "concurrent-ruby", '~> 1.0'
+  spec.add_runtime_dependency "concurrent-ruby-ext", '~> 1.0'
   spec.add_runtime_dependency "dry-core"
   spec.add_runtime_dependency "dry-inflector"
   spec.add_runtime_dependency "dry-logic"
@@ -39,4 +39,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "yard"
 end
