@@ -1,8 +1,10 @@
-# Drymm
+# Drym¹m² is for (¹)meta (²)mapping
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/drymm`. To experiment with that code, run `bin/console` for an interactive prompt.
+Drymm represents entities provided by `Dry::Logic` & `Dry::Types` as a `Dry::Struct` classes under a `Drymm::Shapes` namespace.
 
-TODO: Delete this and the text above, and describe your gem
+The core feature of `Drymm::Shapes` is an ability to cast an AST produced by that entities and structurize it for the following serialization. Also it provides an interface to load serialized data and compile it back  the Type or Logic entity.
+
+The casts perform by declaring expecting shapes under a specific `Drymm::Shapes::Branch` without any conditional code but with a significant amount of recursion. Shapes composed into `Dry::Struct::Sum` and handled by `Concurrent::AtomicReference` which are in front of the casting behaviour.
 
 ## Installation
 
@@ -16,7 +18,6 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
-TODO: Write usage instructions here
 
 ## Development
 
@@ -26,7 +27,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/anton.estum@gmail.com/drymm. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/anton.estum@gmail.com/drymm/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/estum/drymm. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/estum/drymm/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -34,4 +35,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Drymm project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/anton.estum@gmail.com/drymm/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Drymm project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/estum/drymm/blob/main/CODE_OF_CONDUCT.md).
