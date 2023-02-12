@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
   spec.metadata["homepage_uri"]      = spec.homepage
   spec.metadata["source_code_uri"]   = "https://github.com/estum/drymm"
+  spec.metadata["github_repo"]       = "ssh://github.com/estum/drymm"
   spec.metadata["changelog_uri"]     = "https://github.com/estum/drymm/blob/main/CHANGELOG.md"
 
   spec.required_ruby_version = ">= 2.6.0"
