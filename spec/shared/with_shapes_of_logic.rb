@@ -1,4 +1,6 @@
-RSpec.shared_context 'logic shapes' do
+# frozen_string_literal: true
+
+RSpec.shared_context "with shapes of logic" do
   def predicate_shape(name, input: undefined, **args)
     { type: :predicate, name: name, args: [*args.to_a, [:input, input]] }
   end

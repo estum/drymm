@@ -1,13 +1,15 @@
-RSpec.shared_context 'types shapes' do
-  include_context 'logic shapes'
+# frozen_string_literal: true
+
+RSpec.shared_context "with shapes of types" do
+  include_context "with shapes of logic"
 
   let(:any_shape) { { type: :any, meta: {} } }
 
   let(:array_shape) { { type: :array, member: any_shape, meta: {} } }
 
-  let(:str_class) { { type: :const, name: 'String' } }
+  let(:str_class) { { type: :const, name: "String" } }
 
-  let(:sym_class) { { type: :const, name: 'Symbol' } }
+  let(:sym_class) { { type: :const, name: "Symbol" } }
 
   let(:n_str_shape) { { type: :nominal, base: str_class, meta: {} } }
 

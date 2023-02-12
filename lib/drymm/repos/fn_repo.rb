@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 module Drymm
+  # @api private
   module FnRepo
-    extend Dry::Container::Mixin
+    extend Container
 
     register :ary_wrap do |input|
-      Drymm['rules.ary'][input] ? input : [input]
+      Drymm["rules.ary"][input] ? input : [input]
     end
 
     register :logic_builder do |fn|

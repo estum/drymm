@@ -1,5 +1,7 @@
-RSpec.shared_context 'logic rules' do
-  include_context "logic predicates"
+# frozen_string_literal: true
+
+RSpec.shared_context "with logic rules" do
+  include_context "with logic predicates"
 
   let(:rule)       { Dry::Logic::Rule::Predicate.build(filled?) }
   let(:key_op)     { Dry::Logic::Operations::Key.new(rule, name: :email) }

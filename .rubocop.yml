@@ -1,5 +1,10 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
   TargetRubyVersion: 2.6
+  NewCops: disable
 
 Style/StringLiterals:
   Enabled: true
@@ -9,5 +14,23 @@ Style/StringLiteralsInInterpolation:
   Enabled: true
   EnforcedStyle: double_quotes
 
+RSpec/MultipleMemoizedHelpers:
+  Max: 20
+
 Layout/LineLength:
   Max: 120
+
+Style/LambdaCall:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Lint/MissingSuper:
+  Enabled: false
+
+Naming/MethodName:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false

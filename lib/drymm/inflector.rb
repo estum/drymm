@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'dry/inflector'
+require "dry/inflector"
 
 module Drymm
   # @api private
   class Inflector < Dry::Inflector
     def initialize(root_file)
       super() do |inflections|
-        inflections.acronym 'AST'
+        inflections.acronym "AST"
         yield(inflections) if block_given?
       end
       namespace     = File.basename(root_file, ".rb")

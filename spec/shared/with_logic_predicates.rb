@@ -1,6 +1,8 @@
-require 'dry/logic/predicates'
+# frozen_string_literal: true
 
-RSpec.shared_examples "logic predicates" do
+require "dry/logic/predicates"
+
+RSpec.shared_context "with logic predicates" do
   let(:nil?) { Dry::Logic::Predicates[:nil?] }
 
   let(:array?) { Dry::Logic::Predicates[:array?] }

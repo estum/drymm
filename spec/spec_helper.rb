@@ -18,12 +18,12 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  Module.new {
+  Module.new do
     def undefined
       Dry::Core::Constants::Undefined
     end
-  }.then { |shorthands|
+  end.then do |shorthands|
     config.extend shorthands
     config.include shorthands
-  }
+  end
 end
