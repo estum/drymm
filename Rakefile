@@ -3,13 +3,14 @@
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"
 
-RSpec::Core::RakeTask.new(:spec)
+task :run_specs do
+  require "rspec/core"
 
-require "rubocop/rake_task"
-
-RuboCop::RakeTask.new do |task|
-  task.requires << "rubocop-rake"
-  task.requires << "rubocop-rspec"
+  RSpec::Core::Runner.run(["spec"])
 end
 
-task default: %i[spec rubocop]
+task default: :run_specs
+
+require "yard"
+require "yard/rake/yardoc_task"
+YARD::Rake::YardocTask.new(:doc)

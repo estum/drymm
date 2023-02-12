@@ -15,6 +15,7 @@ group :test do
 end
 
 group :tools do
+  gem "yard"
   gem "byebug"
   gem "rubocop", "~> 1.40.0"
   gem "rubocop-rake", require: false
