@@ -1,3 +1,5 @@
+[![Ruby](https://github.com/estum/drymm/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/estum/drymm/actions/workflows/main.yml)
+
 # Drym¹m² is for (¹)meta (²)mapping
 
 Drymm represents entities provided by `Dry::Logic` & `Dry::Types` as a `Dry::Struct` classes under a `Drymm::Shapes` namespace.
